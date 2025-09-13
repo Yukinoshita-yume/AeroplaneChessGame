@@ -58,5 +58,8 @@ public class Player {
     public void setEnd(boolean end) {
         isEnd = end;
     }
+    public void showInfo(){
+        System.out.println("Player"+id+" info: home="+home+", runwayPosition="+runwayPosition+".");
+    }
 }
 
