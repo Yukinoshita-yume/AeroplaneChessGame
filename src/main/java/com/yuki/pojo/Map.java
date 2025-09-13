@@ -1,7 +1,5 @@
 package main.java.com.yuki.pojo;
 
-import java.util.HashMap;
-
 public class Map {
     private final int taxiwayLength;//外围跑道长度
     private final int runwayLength;//结束跑道长度
@@ -24,7 +22,81 @@ public class Map {
             playerInMap[position] = i;//记录玩家位置
         }
     }
-    public void playerMove(int id){
+    public void playerMove(int id, int steps) {
+        Player player = players[id];
+        if(player.isEnd()){//玩家已到达终点
+            System.out.println("Player"+id+" has reached the end and cannot move.");
+            return;
+        }
+        if(!player.isGetRunway()){//玩家未到达结束点
+            int locationTaxiway = player.getLocationTaxiway();
+            int runwayPosition = player.getRunwayPosition();
+            if(player.getHome()!=locationTaxiway){
+                playerInMap[locationTaxiway] = -1;
+            }
+            if(locationTaxiway<runwayPosition){
+                if(locationTaxiway+steps<runwayPosition){//未到达结束点
+                    moveInTaxiway(id, steps, player, locationTaxiway, taxiwayLength, playerInMap, players);
+                }else{//到达或超过结束点
+                    int stepsToRunway = runwayPosition - locationTaxiway;//到达结束点所需步数
+                    moveToRunway(id, steps, player, locationTaxiway, stepsToRunway, runwayLength);
+                }
+            }
+            else{
+                if(locationTaxiway+steps<taxiwayLength+runwayPosition){//未到达结束点
+                    moveInTaxiway(id, steps, player, locationTaxiway, taxiwayLength, playerInMap, players);
+                }else{//到达或超过结束点
+                    int stepsToRunway = taxiwayLength+runwayPosition - locationTaxiway;//到达结束点所需步数
+                    moveToRunway(id, steps, player, locationTaxiway, stepsToRunway, runwayLength);
+                }
+            }
+        }
+        else {
+            int positionInRunway = player.getLocationRunway();
+            int newLocationRunway = positionInRunway(positionInRunway, steps, runwayLength);
+            player.setLocationRunway(newLocationRunway);
+            System.out.println("Player"+id+" move form tail"+positionInRunway+" to tail"+newLocationRunway+".");
+            if(newLocationRunway==runwayLength){
+                player.setEnd(true);
+                System.out.println("Player"+id+" has reached the end!");
+            }
+        }
+    }
+
+    private static void moveToRunway(int id, int steps, Player player, int locationTaxiway, int stepsToRunway, int runwayLength) {
+        int remainingSteps = steps - stepsToRunway;//剩余步数
+        player.setGetRunway(true);//玩家到达跑道
+        int newLocationRunway = positionInRunway(0, remainingSteps, runwayLength);
+        player.setLocationRunway(newLocationRunway);
+        System.out.println("Player"+id+" move form position"+locationTaxiway+" to tail"+newLocationRunway+".");
+        if(newLocationRunway==runwayLength){
+            player.setEnd(true);
+            System.out.println("Player"+id+" has reached the end!");
+        }
+    }
+
+    private static void moveInTaxiway(int id, int steps, Player player, int locationTaxiway, int taxiwayLength, int[] playerInMap, Player[] players) {
+        int newLocation = (locationTaxiway + steps) % taxiwayLength;
+        System.out.println("Player"+id+" move form position"+locationTaxiway+" to position"+newLocation+".");
+        int newLocationPlayer = playerInMap[newLocation];
+        if(newLocationPlayer!=-1){//新位置有玩家
+            Player otherPlayer = players[newLocationPlayer];
+            otherPlayer.setLocationTaxiway(otherPlayer.getHome());//将其他玩家移回家
+            System.out.println("Player"+newLocationPlayer+" is sent back to home position"+otherPlayer.getHome()+".");
+        }
+        playerInMap[newLocation] = id;//更新玩家位置
+        player.setLocationTaxiway(newLocation);
+    }
+
+    private static int positionInRunway(int originalPosition, int steps, int runwayLength) {
+        int temp = (steps%(2*runwayLength)+2*runwayLength)% (2*runwayLength);
+        if(originalPosition+temp<=runwayLength){
+            return originalPosition+temp;
+        }else if(originalPosition+temp<=2*runwayLength){
+            return 2*runwayLength-(originalPosition+temp);
+        }else{
+            return originalPosition+temp-2*runwayLength;
+        }
     }
     public int getTaxiwayLength() {
         return taxiwayLength;
