@@ -34,14 +34,14 @@ public class GameController {
                 }
                 System.out.print("Please enter the length of the taxiway (minimum 20) : ");
                 taxiwayLength = Integer.parseInt(scanner.nextLine());
-                if(taxiwayLength<20){
-                    System.out.println("The length must be at least 20. Please re-enter.");
+                if(taxiwayLength<18){
+                    System.out.println("The length must be at least 18. Please re-enter.");
                     continue;
                 }
                 System.out.print("Please enter the length of the runway (minimum 6) : ");
                 runwayLength = Integer.parseInt(scanner.nextLine());
-                if(runwayLength<6){
-                    System.out.println("The length must be at least 6. Please re-enter.");
+                if(runwayLength<3){
+                    System.out.println("The length must be at least 3. Please re-enter.");
                     continue;
                 }
                 Game game = gameServer.createGame(playerCount, taxiwayLength, runwayLength, diceCount);

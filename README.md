@@ -45,7 +45,7 @@ Run the program → Select the number of dice (1 or 2) → Choose the number of 
 - **Player**
 
   | Property         | Description                                                                 |
-      |------------------|------------------------------------------------------------------------------|
+  |------------------|------------------------------------------------------------------------------|
   | id               | Unique identifier                                                            |
   | home             | Starting position. Defined separately to handle returning to the start point. |
   | locationRunway   | Player’s position on the runway                                               |
@@ -57,7 +57,7 @@ Run the program → Select the number of dice (1 or 2) → Choose the number of 
 - **Map**
 
   | Property        | Description                                                                 |
-      |-----------------|------------------------------------------------------------------------------|
+  |-----------------|------------------------------------------------------------------------------|
   | taxiwayLength   | Map parameter                                                                |
   | runwayLength    | Map parameter                                                                |
   | players         | Array of all players                                                         |
@@ -66,14 +66,14 @@ Run the program → Select the number of dice (1 or 2) → Choose the number of 
 - **Dice**
 
   | Property  | Description |
-      |-----------|-------------|
+  |-----------|-------------|
   | minValue  | Parameter   |
   | maxValue  | Parameter   |
 
 - **Game**
 
   | Property           | Description                    |
-      |--------------------|--------------------------------|
+  |--------------------|--------------------------------|
   | playerCount        | Number of players              |
   | players            | Array of players               |
   | map                | Map                            |
@@ -83,6 +83,31 @@ Run the program → Select the number of dice (1 or 2) → Choose the number of 
   | winnerOrder        | The order of player victories   |
   | winnerCount        | Number of players who have won  |
   | currentPlayerIndex | Index of the current player     |
+
+## Design Patterns
+
+This project utilizes several design patterns to ensure code maintainability, flexibility, and adherence to SOLID principles:
+
+### 1. Strategy Pattern
+- **Interfaces and Implementations**: The project uses interface-based design with concrete implementations
+  - `GameServer` interface and `GameServerImpl` implementation
+  - `DiceShaker` interface and `DiceShakerImpl` implementation
+- **Benefits**: Allows for easy swapping of implementations without modifying client code. For example, different dice rolling strategies or game server implementations can be added without changing the controller layer.
+
+### 2. Dependency Inversion Principle (DIP)
+- **Implementation**: The `GameController` depends on the `GameServer` interface rather than the concrete `GameServerImpl` class
+- **Benefits**: Reduces coupling between layers, making the code more flexible and testable. The controller doesn't need to know about specific implementations, allowing for easier maintenance and extension.
+
+### 3. Three-Layer Architecture
+- **Architecture**: The project follows a three-layer architecture pattern:
+  - **Controller Layer** (`GameController`): Handles user input/output and coordinates game flow
+  - **Service Layer** (`GameServer`): Contains business logic for game operations
+  - **POJO Layer** (`Game`, `Player`, `Map`, `Dice`): Contains data models and domain entities
+- **Benefits**: Separates concerns, making the code more organized, maintainable, and easier to understand. Each layer has a clear responsibility.
+
+### 4. Encapsulation
+- **Implementation**: All POJO classes use private fields with public getters and setters
+- **Benefits**: Protects internal state and provides controlled access to object properties, ensuring data integrity.
 
 ## Key Logic Challenges
 1. **Representing Player Positions**

@@ -52,8 +52,8 @@ https://github.com/Yukinoshita-yume/AeroplaneChessGame.git
 
 - Map
 
-    | 属性            | 说明                                                                                                            |
-    |---------------|---------------------------------------------------------------------------------------------------------------|
+    | 属性            |  说明 |
+    |---------------|--------------------------------------|
     | taxiwayLength | 地图参数                                                                                                          |
     | runwayLength  | 地图参数                                                                                                          |
     | players       | 保存玩家的数组                                                                                                       |
@@ -61,8 +61,8 @@ https://github.com/Yukinoshita-yume/AeroplaneChessGame.git
 
 - Dice
 
-    | 属性   | 说明       |
-    |------|----------|
+    | 属性   | 说明     |
+    |------ |----------|
     | minValue | 参数 |
     | maxValue | 参数 |
 
@@ -77,8 +77,33 @@ https://github.com/Yukinoshita-yume/AeroplaneChessGame.git
     | diceCount     | 骰子数量             |
     | isGameOver    | 游戏是否结束          |
     | winnerOrder   | 记录玩家获胜顺序        |
-    | winnerCount   | 记录已获胜玩家数量       |
-    | currentPlayerIndex | 当前玩家索引        |
+  | winnerCount   | 记录已获胜玩家数量       |
+  | currentPlayerIndex | 当前玩家索引        |
+
+## 设计模式
+
+本项目使用了多种设计模式，以确保代码的可维护性、灵活性和遵循SOLID原则：
+
+### 1. 策略模式（Strategy Pattern）
+- **接口与实现**：项目采用基于接口的设计，使用接口和具体实现类
+  - `GameServer` 接口和 `GameServerImpl` 实现类
+  - `DiceShaker` 接口和 `DiceShakerImpl` 实现类
+- **优势**：允许在不修改客户端代码的情况下轻松替换实现。例如，可以添加不同的骰子掷点策略或游戏服务器实现，而无需更改控制器层。
+
+### 2. 依赖倒置原则（Dependency Inversion Principle，DIP）
+- **实现方式**：`GameController` 依赖于 `GameServer` 接口，而不是具体的 `GameServerImpl` 类
+- **优势**：减少层之间的耦合，使代码更加灵活和可测试。控制器不需要了解具体的实现细节，便于维护和扩展。
+
+### 3. 三层架构模式（Three-Layer Architecture）
+- **架构设计**：项目采用三层架构模式：
+  - **Controller层**（`GameController`）：处理用户输入/输出，协调游戏流程
+  - **Service层**（`GameServer`）：包含游戏操作的核心业务逻辑
+  - **POJO层**（`Game`、`Player`、`Map`、`Dice`）：包含数据模型和领域实体
+- **优势**：职责分离，使代码更加组织化、可维护且易于理解。每一层都有明确的职责。
+
+### 4. 封装模式（Encapsulation）
+- **实现方式**：所有POJO类使用私有字段和公共的getter/setter方法
+- **优势**：保护内部状态，提供对对象属性的受控访问，确保数据完整性。
 
 ## 代码逻辑难点
 1. 玩家位置的表示
